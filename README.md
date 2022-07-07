@@ -6,7 +6,7 @@ This document also explains how to manually tune the self-capacitance-based low-
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-psoc4-msclp-capsense-low-power)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzUxMTEiLCJTcGVjIE51bWJlciI6IjAwMi0zNTExMSIsIkRvYyBUaXRsZSI6IlBTb0MmdHJhZGU7IDQ6IE1TQ0xQIENBUFNFTlNFJnRyYWRlOyBsb3cgcG93ZXIiLCJyaWQiOiJqb2JpIiwiRG9jIHZlcnNpb24iOiIxLjAuMCIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzUxMTEiLCJTcGVjIE51bWJlciI6IjAwMi0zNTExMSIsIkRvYyBUaXRsZSI6IlBTb0MmdHJhZGU7IDQ6IE1TQ0xQIENBUFNFTlNFJnRyYWRlOyBsb3cgcG93ZXIiLCJyaWQiOiJqb2JpIiwiRG9jIHZlcnNpb24iOiIxLjAuMSIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
 
 ## Requirements
 
@@ -135,7 +135,7 @@ The project has the necessary settings by default, so you can go to [Operation](
 
    Default location: */ModusToolbox/tools_3.0/fw-loader/bin*
 
-   Select the SWD mode by running the *Select_SWD* batch file to program the CY8CKIT-040T kit. For detailed information, see Step 3 of Section 2.3 in [CY8CKIT-040T kit user guide](www.infineon.com/002-34472).
+   Select the SWD mode by running the *Select_SWD* batch file to program the CY8CKIT-040T kit. For detailed information, see Section 2.3.1 in [CY8CKIT-040T kit user guide](www.infineon.com/002-34472).
 
 3. Program the board using one of the following:
 
@@ -264,11 +264,11 @@ The project has the necessary settings by default, so you can go to [Operation](
 
    Disable the `ENABLE_SPI_SERIAL_LED` and `ENABLE_TUNER` macros in *main.c* as follows:
 
-   ```
-   #define ENABLE_SPI_SERIAL_LED            (0u)
+    ```
+      #define ENABLE_SPI_SERIAL_LED            (0u)
 
-   #define ENABLE_TUNER                     (0u)
-   ```
+      #define ENABLE_TUNER                     (0u)
+    ```
 
 2. Run the *Select_No_Connection* batch file, to completely disconnect the MCU from the onboard KitProg.
 
@@ -299,6 +299,7 @@ The project has the necessary settings by default, so you can go to [Operation](
    | Wake on Touch <br>(WoT) | GREEN  |16 |4.3 |
 
  6. The ILO clock is used to control the refresh rate in this project; this clock is expected to have up to 50% variation across different PSoC&trade; 4000T devices. Measure the actual ILO clock frequency and update the `MEASURED_ILO` macro in *main.c* as follows to get the expected current results:
+
     ```
       #define MEASURED_ILO                     (40u)
     ```
@@ -652,7 +653,7 @@ The software threshold is set for each widget based on the diff counts. Do the f
 
 You can debug this project to step through the code. In the IDE, use the **\<Application Name> Debug (KitProg3_MiniProg4)** configuration in the **Quick Panel**. For more details, see the "Program and debug" section in the [Eclipse IDE for ModusToolbox&trade; user guide](https://www.cypress.com/MTBEclipseIDEUserGuide).
 
-**Note:** The debug port is disabled by default for CY8CKIT-040T, because it uses the pins P3[3] (SWDIO) and P3[2] (SWDCK) for I2C SDA and SCL. If debug is required, do the following:
+**Note:** The debug port is disabled by default for CY8CKIT-040T, because it uses the pins P3[2] (SWDIO) and P3[3] (SWDCK) for I2C SDA and SCL. If debug is required, do the following:
    1. Enable the **Debug Mode** under the **Systems** tab in the **Device Configurator** and change the **Debug Mode** setting to **SWD**.
    2. Disable I2C in the project by disabling the **Serial Communication Block (SCB)** resource with **EZI2C** personality in **Peripherals Tab** in the **Device Configurator**.
    3. Enable the **SWD_DEBUG_ENABLE** macro present in the *main.c* file as follows: *#define SWD_DEBUG_ENABLE (1u)*. See **Step 4** in **Section 2.3** of the Kit guide for more details.
@@ -778,7 +779,7 @@ Document title: *CE235111* – *PSoC&trade; 4: MSCLP CAPSENSE&trade; low power*
  Version | Description of change
  ------- | ---------------------
  1.0.0   | New code example
-
+ 1.0.1   | Minor readme update
 
 
 
