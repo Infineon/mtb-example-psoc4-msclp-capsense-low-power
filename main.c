@@ -8,7 +8,7 @@
 *
 *
 *******************************************************************************
-* $ Copyright 2021-2022 Cypress Semiconductor $
+* $ Copyright 2021-2023 Cypress Semiconductor $
 *******************************************************************************/
 
 /*******************************************************************************
@@ -25,91 +25,76 @@
 /*******************************************************************************
 * User configurable Macros
 ********************************************************************************/
+/*Enables the Runtime measurement functionality used to for processing time measurement */
+#define ENABLE_RUN_TIME_MEASUREMENT     (0u)
 
 /* Enable this, if Serial LED needs to be enabled */
-#define ENABLE_SPI_SERIAL_LED            (1u)
+#define ENABLE_SPI_SERIAL_LED           (1u)
 
 /* Enable this, if Tuner needs to be enabled */
-#define ENABLE_TUNER                     (1u)
-
-/* Enable this, if Debugging needs to be enabled -
- *    See Readme for more details.
- *    SWD and Tuner cannot be enabled together as the pins are MUXed in CY8CKIT-040T */
-#define SWD_DEBUG_ENABLE                 (0u)
+#define ENABLE_TUNER                    (1u)
 
 /* 128Hz Refresh rate in Active mode */
-#define ACTIVE_MODE_REFRESH_RATE         (128u)
+#define ACTIVE_MODE_REFRESH_RATE        (128u)
 
 /* 32Hz Refresh rate in Active-Low Refresh rate(ALR) mode */
-#define ALR_MODE_REFRESH_RATE            (32u)
+#define ALR_MODE_REFRESH_RATE           (32u)
 
 /* Timeout to move from ACTIVE mode to ALR mode if there is no user activity */
-#define ACTIVE_MODE_TIMEOUT_SEC          (10u)
+#define ACTIVE_MODE_TIMEOUT_SEC         (10u)
 
 /* Timeout to move from ALR mode to WOT mode if there is no user activity */
-#define ALR_MODE_TIMEOUT_SEC             (5u)
+#define ALR_MODE_TIMEOUT_SEC            (5u)
 
-/* Active mode Scan time in us ~= 16us */
-#define ACTIVE_MODE_FRAME_SCAN_TIME      (16u)
-/* Active mode Processing time in us ~= 25us with Serial LED and Tuner disabled
- * and 179us with Serial LED and Tuner enabled */
-#define ACTIVE_MODE_PROCESS_TIME         (25u)
+/* Active mode Scan time measured in us ~= 37us */
+#define ACTIVE_MODE_FRAME_SCAN_TIME     (37u)
 
-/* ALR mode Scan time in us ~= 16us */
-#define ALR_MODE_FRAME_SCAN_TIME         (16u)
-/* ALR mode Processing time in us ~= 25us with Serial LED and Tuner disabled
- * and 179us with Serial LED and Tuner enabled */
-#define ALR_MODE_PROCESS_TIME            (25u)
+/* Active mode Processing time in us ~= 23us with Serial LED and Tuner disabled*/
+#define ACTIVE_MODE_PROCESS_TIME        (23u)
+
+/* ALR mode Scan time Measured in us ~= 37us */
+#define ALR_MODE_FRAME_SCAN_TIME        (37u)
+
+/* ALR mode Processing time in us ~= 23us with Serial LED and Tuner disabled*/
+#define ALR_MODE_PROCESS_TIME           (23u)
 
 /*******************************************************************************
 * Macros
 ********************************************************************************/
-#define CAPSENSE_MSC0_INTR_PRIORITY      (3u)
-#define CY_ASSERT_FAILED                 (0u)
+#define CAPSENSE_MSC0_INTR_PRIORITY     (3u)
+#define CY_ASSERT_FAILED                (0u)
 
-/* Setting self-cap sensors raw-count calibration percentage to 70% */
-#define CSD_CALIBRATION_LEVEL            (70u)
-
-/* setting recommended CDAC Dither scale value. Default is '0u' */
-#define    CDAC_DITHER_SCALE             (1u)
-
-/* setting recommended CDAC Dither seed value. Default is '255u' */
-#define    CDAC_DITHER_SEED              (15u)
-
-/* setting recommended CDAC Dither poly value. Default is '142u' */
-#define    CDAC_DITHER_POLY              (9u)
-
-/* Setting SWD_DEBUG_ENABLE to 0 enabled EZI2C */
-#define ENABLE_EZI2C                     (!SWD_DEBUG_ENABLE)
-
-#if ENABLE_EZI2C
 /* EZI2C interrupt priority must be higher than CAPSENSE&trade; interrupt. */
-#define EZI2C_INTR_PRIORITY              (2u)
-#endif
+#define EZI2C_INTR_PRIORITY             (2u)
 
-#define ILO_FREQ                         (40000u)
-#define TIME_IN_US                       (1000000u)
+#define ILO_FREQ                        (40000u)
+#define TIME_IN_US                      (1000000u)
 
-#define MINIMUM_TIMER                    (TIME_IN_US / ILO_FREQ)
+#define MINIMUM_TIMER                   (TIME_IN_US / ILO_FREQ)
 #if ((TIME_IN_US / ACTIVE_MODE_REFRESH_RATE) > (ACTIVE_MODE_FRAME_SCAN_TIME + ACTIVE_MODE_PROCESS_TIME))
-    #define ACTIVE_MODE_TIMER            (TIME_IN_US / ACTIVE_MODE_REFRESH_RATE - \
-                                            (ACTIVE_MODE_FRAME_SCAN_TIME + ACTIVE_MODE_PROCESS_TIME))
+    #define ACTIVE_MODE_TIMER           (TIME_IN_US / ACTIVE_MODE_REFRESH_RATE - \
+                                        (ACTIVE_MODE_FRAME_SCAN_TIME + ACTIVE_MODE_PROCESS_TIME))
 #elif
-    #define ACTIVE_MODE_TIMER            (MINIMUM_TIMER)
+    #define ACTIVE_MODE_TIMER           (MINIMUM_TIMER)
 #endif
 
 #if ((TIME_IN_US / ALR_MODE_REFRESH_RATE) > (ALR_MODE_FRAME_SCAN_TIME + ALR_MODE_PROCESS_TIME))
-    #define ALR_MODE_TIMER               (TIME_IN_US / ALR_MODE_REFRESH_RATE - \
+    #define ALR_MODE_TIMER              (TIME_IN_US / ALR_MODE_REFRESH_RATE - \
                                             (ALR_MODE_FRAME_SCAN_TIME + ALR_MODE_PROCESS_TIME))
 #elif
-    #define ALR_MODE_TIMER               (MINIMUM_TIMER)
+    #define ALR_MODE_TIMER              (MINIMUM_TIMER)
 #endif
 
-#define ACTIVE_MODE_TIMEOUT              (ACTIVE_MODE_REFRESH_RATE * ACTIVE_MODE_TIMEOUT_SEC)
+#define ACTIVE_MODE_TIMEOUT             (ACTIVE_MODE_REFRESH_RATE * ACTIVE_MODE_TIMEOUT_SEC)
 
-#define ALR_MODE_TIMEOUT                 (ALR_MODE_REFRESH_RATE * ALR_MODE_TIMEOUT_SEC)
+#define ALR_MODE_TIMEOUT                (ALR_MODE_REFRESH_RATE * ALR_MODE_TIMEOUT_SEC)
 
-#define TIMEOUT_RESET                    (0u)
+#define TIMEOUT_RESET                   (0u)
+
+#if ENABLE_RUN_TIME_MEASUREMENT
+    #define SYS_TICK_INTERVAL           (0x00FFFFFF)
+    #define TIME_PER_TICK_IN_US         ((float)1/CY_CAPSENSE_CPU_CLK)*TIME_IN_US
+#endif
 
 /*****************************************************************************
 * Finite state machine states for device operating states
@@ -128,12 +113,19 @@ typedef enum
 * Function Prototypes
 ********************************************************************************/
 static void initialize_capsense(void);
-static void set_dither_parameters(void);
 static void capsense_msc0_isr(void);
 
-#if ENABLE_EZI2C
+#if CY_CAPSENSE_BIST_EN
+static void measure_sensor_capacitance(uint32_t *sensor_capacitance);
+#endif
+
 static void ezi2c_isr(void);
 static void initialize_capsense_tuner(void);
+
+#if ENABLE_RUN_TIME_MEASUREMENT
+static void init_sys_tick();
+static void start_runtime_measurement();
+static uint32_t stop_runtime_measurement();
 #endif
 
 #if ENABLE_SPI_SERIAL_LED
@@ -152,9 +144,7 @@ cy_en_syspm_status_t deep_sleep_callback(cy_stc_syspm_callback_params_t *callbac
 /* Variables holds the current low power state [ACTIVE, ALR or WOT] */
 APPLICATION_STATE capsense_state;
 
-#if ENABLE_EZI2C
 cy_stc_scb_ezi2c_context_t ezi2c_context;
-#endif
 
 #if ENABLE_SPI_SERIAL_LED
 extern cy_stc_scb_spi_context_t CYBSP_MASTER_SPI_context;
@@ -163,14 +153,12 @@ stc_serial_led_context_t led_context;
 
 /* Callback parameters for custom, EzI2C, SPI */
 
-#if ENABLE_EZI2C
 /* Callback parameters for EzI2C */
 cy_stc_syspm_callback_params_t ezi2cCallbackParams =
 {
     .base       = SCB1,
     .context    = &ezi2c_context
 };
-#endif
 
 #if ENABLE_SPI_SERIAL_LED
 /* Callback parameters for SPI */
@@ -187,7 +175,6 @@ cy_stc_syspm_callback_params_t deepSleepCallBackParams = {
     .context    =  NULL
 };
 
-#if ENABLE_EZI2C
 /* Callback declaration for EzI2C Deep Sleep callback */
 cy_stc_syspm_callback_t ezi2cCallback =
 {
@@ -199,7 +186,6 @@ cy_stc_syspm_callback_t ezi2cCallback =
     .nextItm        = NULL,
     .order          = 0
 };
-#endif
 
 #if ENABLE_SPI_SERIAL_LED
 /* Callback declaration for SPI Deep Sleep callback */
@@ -227,6 +213,9 @@ cy_stc_syspm_callback_t deepSleepCb =
     .order          = 2
 };
 
+
+uint32_t process_time=0;
+
 /*******************************************************************************
 * Function Name: main
 ********************************************************************************
@@ -248,8 +237,19 @@ int main(void)
     uint32_t capsense_state_timeout;
     uint32_t interruptStatus;
 
+#if CY_CAPSENSE_BIST_EN
+    uint32_t sensor_capacitance[CY_CAPSENSE_SENSOR_COUNT];
+#endif
+#if ENABLE_RUN_TIME_MEASUREMENT
+    static uint32_t active_processing_time;
+    static uint32_t alr_processing_time;
+#endif
     /* Initialize the device and board peripherals */
     result = cybsp_init() ;
+
+#if ENABLE_RUN_TIME_MEASUREMENT
+    init_sys_tick();
+#endif
 
     /* Board init failed. Stop program execution */
     if (result != CY_RSLT_SUCCESS)
@@ -260,10 +260,8 @@ int main(void)
     /* Enable global interrupts */
     __enable_irq();
 
-    #if ENABLE_EZI2C
     /* Initialize EZI2C */
     initialize_capsense_tuner();
-    #endif
 
     #if ENABLE_SPI_SERIAL_LED
     /* Initialize SPI master */
@@ -290,6 +288,10 @@ int main(void)
     /* Initialize MSC CAPSENSE&trade; */
     initialize_capsense();
 
+#if CY_CAPSENSE_BIST_EN
+    measure_sensor_capacitance(sensor_capacitance);
+#endif
+
     /* Measures the actual ILO frequency and compensate MSCLP wake up timers */
     Cy_CapSense_IloCompensate(&cy_capsense_context);
 
@@ -303,7 +305,6 @@ int main(void)
             case ACTIVE_MODE:
 
                 Cy_CapSense_ScanAllSlots(&cy_capsense_context);
-
                 interruptStatus = Cy_SysLib_EnterCriticalSection();
 
                 while (Cy_CapSense_IsBusy(&cy_capsense_context))
@@ -315,6 +316,11 @@ int main(void)
                     /* This is a place where all interrupt handlers will be executed */
                     interruptStatus = Cy_SysLib_EnterCriticalSection();
                 }
+
+#if ENABLE_RUN_TIME_MEASUREMENT
+                active_processing_time=0;
+                start_runtime_measurement();
+#endif
 
                 Cy_SysLib_ExitCriticalSection(interruptStatus);
 
@@ -344,6 +350,10 @@ int main(void)
                 led_control();
                 #endif
 
+#if ENABLE_RUN_TIME_MEASUREMENT
+                active_processing_time=stop_runtime_measurement();
+#endif
+
                 break;
                 /* End of ACTIVE_MODE */
 
@@ -351,7 +361,6 @@ int main(void)
             case ALR_MODE :
 
                 Cy_CapSense_ScanAllSlots(&cy_capsense_context);
-
                 interruptStatus = Cy_SysLib_EnterCriticalSection();
 
                 while (Cy_CapSense_IsBusy(&cy_capsense_context))
@@ -365,6 +374,11 @@ int main(void)
                 }
 
                 Cy_SysLib_ExitCriticalSection(interruptStatus);
+
+#if ENABLE_RUN_TIME_MEASUREMENT
+                alr_processing_time=0;
+                start_runtime_measurement();
+#endif
 
                 Cy_CapSense_ProcessAllWidgets(&cy_capsense_context);
 
@@ -391,6 +405,10 @@ int main(void)
                         #endif
                     }
                 }
+
+#if ENABLE_RUN_TIME_MEASUREMENT
+                alr_processing_time=stop_runtime_measurement();
+#endif
 
                 break;
                 /* End of Active-Low Refresh Rate(ALR) mode */
@@ -480,14 +498,6 @@ static void initialize_capsense(void)
         NVIC_ClearPendingIRQ(capsense_msc0_interrupt_config.intrSrc);
         NVIC_EnableIRQ(capsense_msc0_interrupt_config.intrSrc);
 
-        /* Setting calibration percentage*/
-        Cy_CapSense_SetCalibrationTarget(CSD_CALIBRATION_LEVEL, CY_CAPSENSE_CSD_GROUP, &cy_capsense_context);
-
-        /* setting Dither parameter
-         * Must be called after Cy_CapSense_Init() and before Cy_CapSense_Enable()
-         */
-        set_dither_parameters();
-
         status = Cy_CapSense_Enable(&cy_capsense_context);
     }
 
@@ -511,45 +521,6 @@ static void capsense_msc0_isr(void)
     Cy_CapSense_InterruptHandler(CY_MSCLP0_HW, &cy_capsense_context);
 }
 
-/*******************************************************************************
-* Function Name: set_dither_parameters
-********************************************************************************
-* Summary:
-*  This functions sets the below CDAC Dither parameters to achive better performance
-*  1. CDAC_Dither_Scale
-*       - Default value is '0'
-*       - Recommended value defined in macro 'CDAC_DITHER_SCALE'
-*  2. CDAC_Dither_poly
-*       - Default value is '142'
-*       - Recommended value defined in macro 'CDAC_DITHER_POLY'
-*  3. CDAC_Dither_Seed
-*       - Default value is '255'
-*       - Recommended value defined in macro 'CDAC_DITHER_SEED'
-*
-*  Note : Must be called after Cy_CapSense_Init() and before Cy_CapSense_Enable
-*
-*  Refer CE Readme for more details
-*  Parameters:  void
-*  Return:  void
-*******************************************************************************/
-static void set_dither_parameters(void)
-{
-    uint32_t wdIndex;
-
-    /* set Dither scale for each widgets*/
-    for (wdIndex = 0u; wdIndex < CY_CAPSENSE_TOTAL_WIDGET_COUNT; wdIndex++)
-    {
-        cy_capsense_context.ptrWdContext[wdIndex].cdacDitherValue = CDAC_DITHER_SCALE;
-    }
-
-    /* set Dither poly for all widgets*/
-    cy_capsense_context.ptrInternalContext->cdacDitherPoly = CDAC_DITHER_POLY;
-
-    /* set Dither seed for all widgets*/
-    cy_capsense_context.ptrInternalContext->cdacDitherSeed = CDAC_DITHER_SEED;
-}
-
-#if ENABLE_EZI2C
 /*******************************************************************************
 * Function Name: initialize_capsense_tuner
 ********************************************************************************
@@ -604,7 +575,85 @@ static void ezi2c_isr(void)
     Cy_SCB_EZI2C_Interrupt(CYBSP_EZI2C_HW, &ezi2c_context);
 }
 
+#if ENABLE_RUN_TIME_MEASUREMENT
+/*******************************************************************************
+* Function Name: init_sys_tick
+********************************************************************************
+* Summary:
+*  initializes the system tick with highest possible value to start counting down.
+*
+*******************************************************************************/
+static void init_sys_tick()
+{
+    Cy_SysTick_Init (CY_SYSTICK_CLOCK_SOURCE_CLK_CPU ,0x00FFFFFF);
+}
 #endif
+
+#if CY_CAPSENSE_BIST_EN
+/*******************************************************************************
+* Function Name: measure_sensor_capacitance
+********************************************************************************
+* Summary:
+*  Measure the sensor Capacitance of all sensors configured and stores the values in an array using BIST.
+*  BIST Measurements are taken by Connection connecting ISC to Shield.
+*  It is based on actual application configuration.
+* Parameters:
+*   sensor_capacitance - This array holds the measured sensor capacitance values.
+*                        array values are arranged as regular widget sensors first and
+*                        followed by Low power widget sensors . refer configurator for the
+*                        sensor order.
+*******************************************************************************/
+static void measure_sensor_capacitance(uint32_t *sensor_capacitance)
+{
+    /* For BIST configuration Connecting all Inactive sensor connections (ISC) of CSD sensors to to shield*/
+    Cy_CapSense_SetInactiveElectrodeState(CY_CAPSENSE_SNS_CONNECTION_SHIELD,
+    CY_CAPSENSE_BIST_CSD_GROUP, &cy_capsense_context);
+
+    /*Runs the BIST to measure the sensor capacitance*/
+    Cy_CapSense_RunSelfTest(CY_CAPSENSE_BIST_SNS_CAP_MASK,
+            &cy_capsense_context);
+    memcpy(sensor_capacitance,
+            cy_capsense_context.ptrWdConfig->ptrSnsCapacitance,
+            CY_CAPSENSE_SENSOR_COUNT * sizeof(uint32_t));
+}
+
+#endif
+
+#if ENABLE_RUN_TIME_MEASUREMENT
+/*******************************************************************************
+* Function Name: start_runtime_measurement
+********************************************************************************
+* Summary:
+*  Initializes the system tick counter by calling Cy_SysTick_Clear() API.
+*******************************************************************************/
+static void start_runtime_measurement()
+{
+    Cy_SysTick_Clear();
+}
+
+/*******************************************************************************
+* Function Name: stop_runtime_measurement
+********************************************************************************
+* Summary:
+*  Reads the system tick and converts to time in microseconds(us).
+*
+*  Returns:
+*  runtime - in microseconds(us)
+*******************************************************************************/
+
+static uint32_t stop_runtime_measurement()
+{
+uint32_t ticks;
+    uint32_t runtime;
+    ticks=Cy_SysTick_GetValue();
+    ticks= SYS_TICK_INTERVAL - Cy_SysTick_GetValue();
+    runtime=ticks*TIME_PER_TICK_IN_US;
+    return runtime;
+}
+#endif
+
+
+
 
 #if ENABLE_SPI_SERIAL_LED
 /*******************************************************************************
@@ -706,10 +755,8 @@ void led_control()
 *******************************************************************************/
 void register_callback(void)
 {
-    #if ENABLE_EZI2C
-    /* Register EzI2C Deep Sleep callback */
+     /* Register EzI2C Deep Sleep callback */
     Cy_SysPm_RegisterCallback(&ezi2cCallback);
-    #endif
 
     #if ENABLE_SPI_SERIAL_LED
     /* Register SPI Deep Sleep callback */
