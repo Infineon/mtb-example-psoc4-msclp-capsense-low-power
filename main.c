@@ -47,13 +47,13 @@
 #define ALR_MODE_TIMEOUT_SEC            (5u)
 
 /* Active mode Scan time measured in us ~= 37us */
-#define ACTIVE_MODE_FRAME_SCAN_TIME     (37u)
+#define ACTIVE_MODE_FRAME_SCAN_TIME     (10u)
 
 /* Active mode Processing time in us ~= 23us with Serial LED and Tuner disabled*/
 #define ACTIVE_MODE_PROCESS_TIME        (23u)
 
 /* ALR mode Scan time Measured in us ~= 37us */
-#define ALR_MODE_FRAME_SCAN_TIME        (37u)
+#define ALR_MODE_FRAME_SCAN_TIME        (10u)
 
 /* ALR mode Processing time in us ~= 23us with Serial LED and Tuner disabled*/
 #define ALR_MODE_PROCESS_TIME           (23u)
@@ -212,9 +212,6 @@ cy_stc_syspm_callback_t deepSleepCb =
     .nextItm        = NULL,
     .order          = 2
 };
-
-
-uint32_t process_time=0;
 
 /*******************************************************************************
 * Function Name: main
@@ -585,7 +582,7 @@ static void ezi2c_isr(void)
 *******************************************************************************/
 static void init_sys_tick()
 {
-    Cy_SysTick_Init (CY_SYSTICK_CLOCK_SOURCE_CLK_CPU ,0x00FFFFFF);
+    Cy_SysTick_Init (CY_SYSTICK_CLOCK_SOURCE_CLK_CPU , SYS_TICK_INTERVAL);
 }
 #endif
 
