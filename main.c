@@ -115,9 +115,6 @@ typedef enum
 static void initialize_capsense(void);
 static void capsense_msc0_isr(void);
 
-#if CY_CAPSENSE_BIST_EN
-static void measure_sensor_capacitance(uint32_t *sensor_capacitance);
-#endif
 
 static void ezi2c_isr(void);
 static void initialize_capsense_tuner(void);
@@ -224,6 +221,9 @@ cy_stc_syspm_callback_t deepSleepCb =
 *  - scan touch input continuously at 3 different power modes
 *  - serial RGB LED for touch indication
 *
+* Parameters:
+*  void
+*
 * Return:
 *  int
 *
@@ -234,9 +234,7 @@ int main(void)
     uint32_t capsense_state_timeout;
     uint32_t interruptStatus;
 
-#if CY_CAPSENSE_BIST_EN
-    uint32_t sensor_capacitance[CY_CAPSENSE_SENSOR_COUNT];
-#endif
+
 #if ENABLE_RUN_TIME_MEASUREMENT
     static uint32_t active_processing_time;
     static uint32_t alr_processing_time;
@@ -285,9 +283,6 @@ int main(void)
     /* Initialize MSC CAPSENSE&trade; */
     initialize_capsense();
 
-#if CY_CAPSENSE_BIST_EN
-    measure_sensor_capacitance(sensor_capacitance);
-#endif
 
     /* Measures the actual ILO frequency and compensate MSCLP wake up timers */
     Cy_CapSense_IloCompensate(&cy_capsense_context);
@@ -586,7 +581,6 @@ static void init_sys_tick()
 }
 #endif
 
-#if CY_CAPSENSE_BIST_EN
 /*******************************************************************************
 * Function Name: measure_sensor_capacitance
 ********************************************************************************
@@ -600,21 +594,10 @@ static void init_sys_tick()
 *                        followed by Low power widget sensors . refer configurator for the
 *                        sensor order.
 *******************************************************************************/
-static void measure_sensor_capacitance(uint32_t *sensor_capacitance)
-{
     /* For BIST configuration Connecting all Inactive sensor connections (ISC) of CSD sensors to to shield*/
-    Cy_CapSense_SetInactiveElectrodeState(CY_CAPSENSE_SNS_CONNECTION_SHIELD,
-    CY_CAPSENSE_BIST_CSD_GROUP, &cy_capsense_context);
 
     /*Runs the BIST to measure the sensor capacitance*/
-    Cy_CapSense_RunSelfTest(CY_CAPSENSE_BIST_SNS_CAP_MASK,
-            &cy_capsense_context);
-    memcpy(sensor_capacitance,
-            cy_capsense_context.ptrWdConfig->ptrSnsCapacitance,
-            CY_CAPSENSE_SENSOR_COUNT * sizeof(uint32_t));
-}
 
-#endif
 
 #if ENABLE_RUN_TIME_MEASUREMENT
 /*******************************************************************************
