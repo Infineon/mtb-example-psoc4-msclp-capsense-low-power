@@ -10,9 +10,9 @@ This document also explains how to manually tune the self-capacitance-based low-
 
 ## Requirements
 
-- [ModusToolbox&trade;](https://www.infineon.com/modustoolbox) v3.2 or later
+- [ModusToolbox&trade;](https://www.infineon.com/modustoolbox) v3.8 or later
 
- > **Note:** This code example requires ModusToolbox&trade; v3.2 and is not backward compatible with v3.1 or older.
+ > **Note:** This code example requires ModusToolbox&trade; v3.8 and is not backward compatible with v3.7 or older.
 
 - Board support package (BSP) minimum required version: 3.1.0
 - Programming language: C
@@ -1008,6 +1008,7 @@ Document title: *CE235111* – *PSoC&trade; 4: MSCLP CAPSENSE&trade; low power*
  3.0.1   | Minor configuration and readme update
  4.0.0   | Major update to support ModusToolbox™ v3.2 and CAPSENSE™ Middleware v5.0. This version is not backward compatible with previous versions of ModusToolbox™ software.
  4.0.1   | Updated minimum required BSP version in Readme
+ 5.0.0   | Major update to support  ModusToolbox&trade; v3.8. This version is not backward compatible with previous versions of ModusToolbox&trade;. Updated to CAPSENSE&trade; Middleware v11.0 and CAPSENSE&trade; Configurator V12.0
 
 <br>
 
